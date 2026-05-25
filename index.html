@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网页设计报价计算器 | 在线免费估价</title>
+<style>
+:root{--bg:#0b0b12;--card:#13131f;--border:#1e1e32;--text:#e0e0eb;--muted:#7b7b96;--accent:#7c5ce7;--accent2:#a29bfe;--radius:14px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.container{max-width:680px;margin:0 auto;padding:24px}
+header{text-align:center;padding:48px 0 32px}
+header h1{font-size:2rem;font-weight:800;margin-bottom:8px;letter-spacing:-.5px}
+header p{color:var(--muted);font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:20px}
+.card h2{font-size:1.1rem;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.card h2 .icon{font-size:1.3rem}
+.options{display:flex;flex-wrap:wrap;gap:10px}
+.option{flex:1;min-width:100px;padding:16px 12px;background:var(--bg);border:2px solid var(--border);border-radius:10px;cursor:pointer;text-align:center;transition:all .2s}
+.option:hover{border-color:var(--muted)}
+.option.selected{border-color:var(--accent);background:rgba(124,92,231,.1)}
+.option .name{font-size:.9rem;font-weight:600;margin-bottom:4px}
+.option .hint{font-size:.75rem;color:var(--muted)}
+.check-group{display:flex;flex-direction:column;gap:12px}
+.check-row{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg);border-radius:10px;cursor:pointer;transition:all .2s}
+.check-row:hover{background:rgba(124,92,231,.05)}
+.check-row input[type=checkbox]{appearance:none;width:20px;height:20px;border:2px solid var(--border);border-radius:6px;cursor:pointer;position:relative;flex-shrink:0;transition:all .2s}
+.check-row input[type=checkbox]:checked{background:var(--accent);border-color:var(--accent)}
+.check-row input[type=checkbox]:checked::after{content:"✓";color:#fff;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;font-weight:700}
+.check-label{font-size:.9rem}
+.check-price{font-size:.85rem;color:var(--accent2);margin-left:auto;font-weight:600}
+.result{text-align:center;padding:40px 0 32px}
+.result .total{font-size:3.5rem;font-weight:800;letter-spacing:-2px;color:var(--accent2)}
+.result .range{font-size:1.1rem;color:var(--muted);margin-top:4px}
+.result .includes{color:var(--muted);font-size:.85rem;margin-top:12px}
+.cta{display:block;width:100%;padding:18px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:1.05rem;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;transition:all .2s}
+.cta:hover{background:#8b6ff0;transform:translateY(-1px)}
+footer{text-align:center;color:var(--muted);font-size:.8rem;padding:24px 0 48px}
+@media(max-width:480px){header h1{font-size:1.5rem}.option{min-width:80px;padding:12px 8px}.result .total{font-size:2.5rem}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>� 网页设计报价计算器</h1>
+<p>选一下你的需求，3 秒出价格</p>
+</header>
+
+<div class="card">
+<h2><span class="icon">📋</span> 网站类型</h2>
+<div class="options" id="typeOptions">
+<div class="option selected" data-type="landing" data-base="800">
+<div class="name">单页落地页</div><div class="hint">产品推广 / 个人介绍</div></div>
+<div class="option" data-type="business" data-base="2500">
+<div class="name">企业官网</div><div class="hint">多页面 / 品牌展示</div></div>
+<div class="option" data-type="ecommerce" data-base="4500">
+<div class="name">电商店铺</div><div class="hint">产品展示 / 购物流程</div></div>
+</div>
+</div>
+
+<div class="card">
+<h2><span class="icon">📄</span> 页面数量</h2>
+<div class="options" id="pageOptions">
+<div class="option selected" data-pages="1" data-add="0"><div class="name">1页</div><div class="hint">单页滚动</div></div>
+<div class="option" data-pages="3" data-add="800"><div class="name">3页</div><div class="hint">小站标配</div></div>
+<div class="option" data-pages="5" data-add="1500"><div class="name">5页</div><div class="hint">常见规格</div></div>
+<div class="option" data-pages="10" data-add="3000"><div class="name">10页+</div><div class="hint">内容较多</div></div>
+</div>
+</div>
+
+<div class="card">
+<h2><span class="icon">⚡</span> 附加功能</h2>
+<div class="check-group" id="featureChecks">
+<label class="check-row">
+<input type="checkbox" data-add="500"><span class="check-label">📱 移动端适配</span><span class="check-price">+¥500</span></label>
+<label class="check-row">
+<input type="checkbox" data-add="400"><span class="check-label">📧 联系表单</span><span class="check-price">+¥400</span></label>
+<label class="check-row">
+<input type="checkbox" data-add="600"><span class="check-label">🔍 SEO 优化</span><span class="check-price">+¥600</span></label>
+<label class="check-row">
+<input type="checkbox" data-add="1200"><span class="check-label">🔗 后台管理系统</span><span class="check-price">+¥1,200</span></label>
+<label class="check-row">
+<input type="checkbox" data-add="300"><span class="check-label">🚀 上线部署协助</span><span class="check-price">+¥300</span></label>
+</div>
+</div>
+
+<div class="result">
+<div>预 估 报 价</div>
+<div class="total" id="totalPrice">¥800</div>
+<div class="range" id="rangeText">起步价</div>
+<div class="includes">包含：设计 + 开发 + 一轮修改</div>
+</div>
+
+<a class="cta" id="ctaBtn" href="#contact">💬 获取详细报价 / 开始合作</a>
+
+<footer>
+✨ 价格透明 · 无隐藏费用 · 改到满意为止<br>
+本站为工具页面，实际报价以最终沟通为准
+</footer>
+</div>
+
+<script>
+function calc(){
+const typeEl=document.querySelector('#typeOptions .option.selected');
+const base=parseInt(typeEl.dataset.base);
+const pageEl=document.querySelector('#pageOptions .option.selected');
+const pageAdd=parseInt(pageEl.dataset.add);
+const checks=document.querySelectorAll('#featureChecks input:checked');
+let featAdd=0;checks.forEach(c=>featAdd+=parseInt(c.dataset.add));
+const total=base+pageAdd+featAdd;
+const min=Math.round(total*0.85);
+const max=Math.round(total*1.15);
+document.getElementById('totalPrice').textContent='¥'+total.toLocaleString();
+document.getElementById('rangeText').textContent='实际 ¥'+min.toLocaleString()+' ~ ¥'+max.toLocaleString();
+}
+
+document.querySelectorAll('.option').forEach(el=>{
+el.addEventListener('click',function(){
+this.parentElement.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
+this.classList.add('selected');
+calc();
+});
+});
+
+document.querySelectorAll('#featureChecks input').forEach(el=>{
+el.addEventListener('change',calc);
+});
+
+document.getElementById('ctaBtn').addEventListener('click',function(){
+const total=document.getElementById('totalPrice').textContent;
+const msg='你好，我在报价计算器看到预估价格 '+total+'，想进一步了解。';
+prompt('复制这段话发给设计师，或在闲鱼搜索"网页设计报价计算器"找到我：',msg);
+});
+</script>
+</body>
+</html>
