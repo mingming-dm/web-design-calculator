@@ -42,8 +42,8 @@ footer{text-align:center;color:var(--muted);font-size:.8rem;padding:24px 0 48px}
 <body>
 <div class="container">
 <header>
-<h1>� 网页设计报价计算器</h1>
-<p>选一下你的需求，3 秒出价格</p>
+<h1>网页设计报价计算器</h1>
+<p>选一下你的需求，3 秒出价格 · 设计师：<b>秋野春日</b></p>
 </header>
 
 <div class="card">
@@ -95,6 +95,7 @@ footer{text-align:center;color:var(--muted);font-size:.8rem;padding:24px 0 48px}
 
 <footer>
 ✨ 价格透明 · 无隐藏费用 · 改到满意为止<br>
+闲鱼搜索「秋野春日」或点上方按钮直接联系<br>
 本站为工具页面，实际报价以最终沟通为准
 </footer>
 </div>
@@ -129,7 +130,7 @@ el.addEventListener('change',calc);
 document.getElementById('ctaBtn').addEventListener('click',function(){
 const total=document.getElementById('totalPrice').textContent;
 const msg='你好，我在报价计算器看到预估价格 '+total+'，想进一步了解。';
-prompt('复制这段话发给设计师，或在闲鱼搜索"网页设计报价计算器"找到我：',msg);
+prompt('打开闲鱼APP → 搜索用户"秋野春日" → 发送上面的话给我\n\n复制这段话：',msg);
 });
 </script>
 </body>
