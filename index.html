@@ -91,11 +91,11 @@ footer{text-align:center;color:var(--muted);font-size:.8rem;padding:24px 0 48px}
 <div class="includes">包含：设计 + 开发 + 一轮修改</div>
 </div>
 
-<a class="cta" id="ctaBtn" href="#contact">💬 获取详细报价 / 开始合作</a>
+<a class="cta" id="ctaBtn" href="https://m.tb.cn/h.R4Fav0N?tk=KhKo5w3corA" target="_blank">💬 去闲鱼联系设计师「秋野春日」</a>
 
 <footer>
 ✨ 价格透明 · 无隐藏费用 · 改到满意为止<br>
-闲鱼搜索「秋野春日」或点上方按钮直接联系<br>
+闲鱼搜索「秋野春日」或 <a href="https://m.tb.cn/h.R4Fav0N?tk=KhKo5w3corA" target="_blank" style="color:var(--accent2)">点此直通闲鱼</a><br>
 本站为工具页面，实际报价以最终沟通为准
 </footer>
 </div>
@@ -129,8 +129,8 @@ el.addEventListener('change',calc);
 
 document.getElementById('ctaBtn').addEventListener('click',function(){
 const total=document.getElementById('totalPrice').textContent;
-const msg='你好，我在报价计算器看到预估价格 '+total+'，想进一步了解。';
-prompt('打开闲鱼APP → 搜索用户"秋野春日" → 发送上面的话给我\n\n复制这段话：',msg);
+const msg=encodeURIComponent('你好，我在报价计算器看到预估价格 '+total+'，想进一步了解。');
+window.open('https://m.tb.cn/h.R4Fav0N?tk=KhKo5w3corA','_blank');
 });
 </script>
 </body>
