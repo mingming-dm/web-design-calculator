@@ -5,45 +5,80 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>网页设计报价计算器 | 在线免费估价</title>
 <style>
-:root{--bg:#0b0b12;--card:#13131f;--border:#1e1e32;--text:#e0e0eb;--muted:#7b7b96;--accent:#7c5ce7;--accent2:#a29bfe;--radius:14px}
+:root{--bg:#06060e;--card:rgba(18,18,35,0.6);--border:rgba(255,255,255,0.06);--text:#e8e8f0;--muted:#7b7b9a;--accent:#7c5ce7;--accent2:#a78bfa;--glow:rgba(124,92,231,0.25);--radius:16px}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
-.container{max-width:680px;margin:0 auto;padding:24px}
-header{text-align:center;padding:48px 0 32px}
-header h1{font-size:2rem;font-weight:800;margin-bottom:8px;letter-spacing:-.5px}
-header p{color:var(--muted);font-size:.95rem}
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:20px}
-.card h2{font-size:1.1rem;margin-bottom:20px;display:flex;align-items:center;gap:10px}
-.card h2 .icon{font-size:1.3rem}
+body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;overflow-x:hidden}
+canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.container{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:24px}
+
+/* Header */
+header{text-align:center;padding:56px 0 40px}
+header .badge{display:inline-block;padding:6px 16px;background:rgba(124,92,231,0.12);border:1px solid rgba(124,92,231,0.3);border-radius:20px;font-size:.8rem;color:var(--accent2);margin-bottom:20px;letter-spacing:1px}
+header h1{font-size:2.2rem;font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#e0e0f0 0%,#a78bfa 50%,#7c5ce7 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px}
+header p{color:var(--muted);font-size:.92rem}
+
+/* Card - Glassmorphism */
+.card{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:20px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(124,92,231,0.5),transparent)}
+.card h2{font-size:1rem;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-weight:600}
+.card h2 .icon{font-size:1.2rem}
+
+/* Options */
 .options{display:flex;flex-wrap:wrap;gap:10px}
-.option{flex:1;min-width:100px;padding:16px 12px;background:var(--bg);border:2px solid var(--border);border-radius:10px;cursor:pointer;text-align:center;transition:all .2s}
-.option:hover{border-color:var(--muted)}
-.option.selected{border-color:var(--accent);background:rgba(124,92,231,.1)}
-.option .name{font-size:.9rem;font-weight:600;margin-bottom:4px}
-.option .hint{font-size:.75rem;color:var(--muted)}
-.check-group{display:flex;flex-direction:column;gap:12px}
-.check-row{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg);border-radius:10px;cursor:pointer;transition:all .2s}
-.check-row:hover{background:rgba(124,92,231,.05)}
-.check-row input[type=checkbox]{appearance:none;width:20px;height:20px;border:2px solid var(--border);border-radius:6px;cursor:pointer;position:relative;flex-shrink:0;transition:all .2s}
-.check-row input[type=checkbox]:checked{background:var(--accent);border-color:var(--accent)}
-.check-row input[type=checkbox]:checked::after{content:"✓";color:#fff;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;font-weight:700}
-.check-label{font-size:.9rem}
-.check-price{font-size:.85rem;color:var(--accent2);margin-left:auto;font-weight:600}
-.result{text-align:center;padding:40px 0 32px}
-.result .total{font-size:3.5rem;font-weight:800;letter-spacing:-2px;color:var(--accent2)}
-.result .range{font-size:1.1rem;color:var(--muted);margin-top:4px}
-.result .includes{color:var(--muted);font-size:.85rem;margin-top:12px}
-.cta{display:block;width:100%;padding:18px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:1.05rem;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;transition:all .2s}
-.cta:hover{background:#8b6ff0;transform:translateY(-1px)}
-footer{text-align:center;color:var(--muted);font-size:.8rem;padding:24px 0 48px}
-@media(max-width:480px){header h1{font-size:1.5rem}.option{min-width:80px;padding:12px 8px}.result .total{font-size:2.5rem}}
+.option{flex:1;min-width:100px;padding:16px 12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;cursor:pointer;text-align:center;transition:all .3s cubic-bezier(.4,0,.2,1);position:relative}
+.option:hover{border-color:rgba(255,255,255,0.15);background:rgba(255,255,255,0.04);transform:translateY(-2px)}
+.option.selected{border-color:var(--accent);background:rgba(124,92,231,0.1);box-shadow:0 0 20px var(--glow),inset 0 0 20px rgba(124,92,231,0.05)}
+.option.selected::after{content:'';position:absolute;inset:-1px;border-radius:12px;border:1px solid transparent;background:linear-gradient(135deg,rgba(124,92,231,0.4),transparent) border-box;-webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.option .name{font-size:.88rem;font-weight:600;margin-bottom:4px}
+.option .hint{font-size:.72rem;color:var(--muted)}
+
+/* Check rows */
+.check-group{display:flex;flex-direction:column;gap:10px}
+.check-row{display:flex;align-items:center;gap:12px;padding:14px 16px;background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.04);border-radius:12px;cursor:pointer;transition:all .25s}
+.check-row:hover{background:rgba(124,92,231,0.05);border-color:rgba(124,92,231,0.2)}
+.check-row input[type=checkbox]{appearance:none;width:20px;height:20px;border:2px solid rgba(255,255,255,0.15);border-radius:6px;cursor:pointer;position:relative;flex-shrink:0;transition:all .25s}
+.check-row input[type=checkbox]:checked{background:var(--accent);border-color:var(--accent);box-shadow:0 0 12px var(--glow)}
+.check-row input[type=checkbox]:checked::after{content:"✓";color:#fff;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:11px;font-weight:700}
+.check-label{font-size:.88rem;font-weight:500}
+.check-price{font-size:.82rem;color:var(--accent2);margin-left:auto;font-weight:600;min-width:60px;text-align:right}
+
+/* Result */
+.result{text-align:center;padding:48px 0 40px;position:relative}
+.result::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:200px;background:radial-gradient(circle,rgba(124,92,231,0.12),transparent 70%);pointer-events:none}
+.result .label{font-size:.8rem;text-transform:uppercase;letter-spacing:3px;color:var(--muted);margin-bottom:12px}
+.result .total{font-size:4rem;font-weight:900;letter-spacing:-3px;background:linear-gradient(135deg,#e0e0f0 0%,#a78bfa 40%,#7c5ce7 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;transition:all .3s;position:relative}
+.result .range{font-size:1rem;color:var(--muted);margin-top:8px}
+.result .includes{color:var(--muted);font-size:.82rem;margin-top:16px;padding:8px 20px;background:rgba(255,255,255,0.02);border-radius:20px;display:inline-block}
+
+/* CTA */
+.cta-wrap{position:relative}
+.cta{display:block;width:100%;padding:18px;background:linear-gradient(135deg,#7c5ce7,#a78bfa);color:#fff;border:none;border-radius:14px;font-size:1rem;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;transition:all .3s;position:relative;overflow:hidden;letter-spacing:.5px}
+.cta::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);transition:left .5s}
+.cta:hover::before{left:100%}
+.cta:hover{box-shadow:0 8px 32px rgba(124,92,231,0.4);transform:translateY(-2px)}
+.cta-glow{position:absolute;inset:-2px;border-radius:16px;background:linear-gradient(135deg,rgba(124,92,231,0.3),rgba(167,139,250,0.3));filter:blur(12px);opacity:0;transition:opacity .3s;pointer-events:none;z-index:-1}
+.cta:hover+.cta-glow,.cta-wrap:hover .cta-glow{opacity:1}
+
+/* Footer */
+footer{text-align:center;color:var(--muted);font-size:.78rem;padding:32px 0 56px}
+footer a{color:var(--accent2);text-decoration:none}
+
+@media(max-width:480px){
+header h1{font-size:1.6rem}
+.option{min-width:80px;padding:12px 8px}
+.option .name{font-size:.8rem}
+.result .total{font-size:2.8rem}
+}
 </style>
 </head>
 <body>
+<canvas id="stars"></canvas>
+
 <div class="container">
 <header>
+<div class="badge">ONLINE PRICING</div>
 <h1>网页设计报价计算器</h1>
-<p>选一下你的需求，3 秒出价格 · 设计师：<b>秋野春日</b></p>
+<p>选择需求，即时估价 · 设计师：<b>秋野春日</b></p>
 </header>
 
 <div class="card">
@@ -85,22 +120,79 @@ footer{text-align:center;color:var(--muted);font-size:.8rem;padding:24px 0 48px}
 </div>
 
 <div class="result">
-<div>预 估 报 价</div>
+<div class="label">预 估 报 价</div>
 <div class="total" id="totalPrice">¥500</div>
-<div class="range" id="rangeText">起步价</div>
+<div class="range" id="rangeText">实际 ¥425 ~ ¥575</div>
 <div class="includes">包含：设计 + 开发 + 一轮修改</div>
 </div>
 
-<a class="cta" id="ctaBtn" href="https://m.tb.cn/h.R4Fav0N?tk=KhKo5w3corA" target="_blank">💬 去闲鱼联系设计师「秋野春日」</a>
+<div class="cta-wrap">
+<a class="cta" id="ctaBtn" href="https://m.tb.cn/h.R4Fav0N?tk=KhKo5w3corA" target="_blank">💬 去闲鱼联系「秋野春日」获取详细报价</a>
+<div class="cta-glow"></div>
+</div>
 
 <footer>
-✨ 价格透明 · 无隐藏费用 · 改到满意为止<br>
-闲鱼搜索「秋野春日」或 <a href="https://m.tb.cn/h.R4Fav0N?tk=KhKo5w3corA" target="_blank" style="color:var(--accent2)">点此直通闲鱼</a><br>
-本站为工具页面，实际报价以最终沟通为准
+✨ 透明定价 · 无隐藏费用 · 改到满意为止<br>
+闲鱼搜索「秋野春日」或 <a href="https://m.tb.cn/h.R4Fav0N?tk=KhKo5w3corA" target="_blank">点此直通闲鱼</a><br>
+实际报价以最终沟通为准
 </footer>
 </div>
 
 <script>
+// ── 粒子背景 ──
+const canvas=document.getElementById('stars');
+const ctx=canvas.getContext('2d');
+let w,h,particles=[];
+function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
+for(let i=0;i<60;i++){
+particles.push({
+x:Math.random()*w,y:Math.random()*h,
+r:Math.random()*1.2+0.3,
+vx:(Math.random()-.5)*0.3,vy:(Math.random()-.5)*0.3,
+opacity:Math.random()*0.5+0.2
+});
+}
+function animate(){
+ctx.clearRect(0,0,w,h);
+particles.forEach(p=>{
+p.x+=p.vx;p.y+=p.vy;
+if(p.x<0)p.x=w;if(p.x>w)p.x=0;if(p.y<0)p.y=h;if(p.y>h)p.y=0;
+ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+ctx.fillStyle=`rgba(167,139,250,${p.opacity})`;ctx.fill();
+});
+// connection lines between nearby particles
+particles.forEach((a,i)=>{
+particles.slice(i+1).forEach(b=>{
+const dx=a.x-b.x,dy=a.y-b.y,dist=Math.sqrt(dx*dx+dy*dy);
+if(dist<120){
+ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+ctx.strokeStyle=`rgba(167,139,250,${0.04*(1-dist/120)})`;
+ctx.lineWidth=0.5;ctx.stroke();
+}
+});
+});
+requestAnimationFrame(animate);
+}
+animate();
+
+// ── 价格计算 + 数字动画 ──
+let currentDisplay=500;
+function animatePrice(target){
+const start=currentDisplay;
+const duration=400;
+const startTime=performance.now();
+function step(now){
+const elapsed=now-startTime;
+const progress=Math.min(elapsed/duration,1);
+const eased=1-Math.pow(1-progress,3);
+const val=Math.round(start+(target-start)*eased);
+document.getElementById('totalPrice').textContent='¥'+val.toLocaleString();
+if(progress<1){requestAnimationFrame(step)}else{currentDisplay=target}
+}
+requestAnimationFrame(step);
+}
+
 function calc(){
 const typeEl=document.querySelector('#typeOptions .option.selected');
 const base=parseInt(typeEl.dataset.base);
@@ -111,26 +203,18 @@ let featAdd=0;checks.forEach(c=>featAdd+=parseInt(c.dataset.add));
 const total=base+pageAdd+featAdd;
 const min=Math.round(total*0.85);
 const max=Math.round(total*1.15);
-document.getElementById('totalPrice').textContent='¥'+total.toLocaleString();
+animatePrice(total);
 document.getElementById('rangeText').textContent='实际 ¥'+min.toLocaleString()+' ~ ¥'+max.toLocaleString();
 }
 
 document.querySelectorAll('.option').forEach(el=>{
 el.addEventListener('click',function(){
 this.parentElement.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
-this.classList.add('selected');
-calc();
+this.classList.add('selected');calc();
 });
 });
-
 document.querySelectorAll('#featureChecks input').forEach(el=>{
 el.addEventListener('change',calc);
-});
-
-document.getElementById('ctaBtn').addEventListener('click',function(){
-const total=document.getElementById('totalPrice').textContent;
-const msg=encodeURIComponent('你好，我在报价计算器看到预估价格 '+total+'，想进一步了解。');
-window.open('https://m.tb.cn/h.R4Fav0N?tk=KhKo5w3corA','_blank');
 });
 </script>
 </body>
